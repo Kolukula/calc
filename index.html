@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Calculator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .calculator {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .display {
+      background-color: #eee;
+      padding: 10px;
+      margin-bottom: 10px;
+      text-align: right;
+      font-size: 20px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 10px;
+    }
+
+    button {
+      padding: 15px;
+      font-size: 18px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .operator {
+      background-color: #f0ad4e;
+      color: white;
+    }
+
+    .equal {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .clear {
+      background-color: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button>7</button>
+      <button>8</button>
+      <button>9</button>
+      <button class="operator">/</button>
+      <button>4</button>
+      <button>5</button>
+      <button>6</button>
+      <button class="operator">*</button>
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button class="operator">-</button>
+      <button>0</button>
+      <button>.</button>
+      <button class="equal">=</button>
+      <button class="operator">+</button>
+      <button class="clear">C</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    let currentInput = '0';
+    let operator = null;
+    let previousInput = null;
+
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const value = button.textContent;
+
+        if (value === '=') {
+          if (operator && previousInput) {
+            currentInput = calculate(previousInput, currentInput, operator);
+          }
+        } else if (value === 'C') {
+          currentInput = '0';
+          operator = null;
+          previousInput = null;
+        } else if (value === '.' && currentInput.includes('.')) {
+          return; // Prevent multiple decimal points
+        } else if (['+', '-', '*', '/'].includes(value)) {
+          operator = value;
+          previousInput = currentInput;
+          currentInput = '0';
+        } else {
+          currentInput = currentInput === '0' ? value : currentInput + value;
+        }
+
+        display.textContent = currentInput;
+      });
+    });
+
+    function calculate(num1, num2, operator) {
+      num1 = parseFloat(num1);
+      num2 = parseFloat(num2);
+
+      switch (operator) {
+        case '+':
+          return (num1 + num2).toString();
+        case '-':
+          return (num1 - num2).toString();
+        case '*':
+          return (num1 * num2).toString();
+        case '/':
+          return (num1 / num2).toString();
+        default:
+          return 'Error';
+      }
+    }
+  </script>
+
+</body>
+</html>
